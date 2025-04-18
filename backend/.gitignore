@@ -1,0 +1,36 @@
+naries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Output of `go build`
+*.out
+
+# Go workspace file
+go.work
+
+# Vendor directory
+/vendor/
+
+# Test binary, coverage output
+*.test
+*.coverprofile
+
+# Dependency directories (Go Modules)
+/go.sum
+/go.mod
+
+# IDE/editor configs
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
