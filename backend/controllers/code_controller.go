@@ -19,6 +19,10 @@ type CodeRunResponse struct {
 	Error  string `json:"error,omitempty"`
 }
 
+func HealthCheck(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"reply": "pong"})
+}
+
 func RunCode(c *gin.Context) {
 	var req CodeRunRequest
 
@@ -49,14 +53,10 @@ func RunCode(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
 func GetSupportedLanguages(c *gin.Context) {
 	languages := []string{
 		"javascript",
-		"python",
-		"go",
-		"java",
-		"c",
-		"cpp",
 	}
 
 	c.JSON(http.StatusOK, gin.H{"languages": languages})

@@ -18,6 +18,7 @@ func main() {
 		AllowCredentials: true,
 	}))
 
+	r.GET("api/ping", controllers.HealthCheck)
 	r.GET("api/languages", controllers.GetSupportedLanguages)
 	r.POST("api/runcode", controllers.RunCode)
 
