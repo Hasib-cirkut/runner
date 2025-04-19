@@ -1,0 +1,84 @@
+definitions:
+  controllers.CodeRunRequest:
+    properties:
+      code:
+        type: string
+      language:
+        type: string
+    required:
+    - code
+    - language
+    type: object
+  controllers.CodeRunResponse:
+    properties:
+      error:
+        type: string
+      stderr:
+        type: string
+      stdout:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /languages:
+    get:
+      consumes:
+      - application/json
+      description: Returns a list of programming languages that can be executed
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+      summary: Get list of supported programming languages
+      tags:
+      - code
+  /ping/:
+    get:
+      consumes:
+      - application/json
+      description: do ping // @Tags example
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: ping example
+  /runcode:
+    post:
+      consumes:
+      - application/json
+      description: Execute code in a specified programming language within a container
+      parameters:
+      - description: Code execution request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CodeRunRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.CodeRunResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Run code in a container
+      tags:
+      - code
+swagger: "2.0"

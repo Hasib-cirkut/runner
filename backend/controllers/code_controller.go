@@ -19,10 +19,28 @@ type CodeRunResponse struct {
 	Error  string `json:"error,omitempty"`
 }
 
+// PingExample godoc
+// @Summary ping example
+// @Schemes
+// @Description do ping // @Tags example
+// @Accept json
+// @Produce json
+// @Success 200 {string} pong
+// @Router /ping/ [get]
 func HealthCheck(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"reply": "pong"})
 }
 
+// RunCode godoc
+// @Summary Run code in a container
+// @Description Execute code in a specified programming language within a container
+// @Tags code
+// @Accept json
+// @Produce json
+// @Param request body CodeRunRequest true "Code execution request"
+// @Success 200 {object} CodeRunResponse
+// @Failure 400 {object} map[string]string
+// @Router /runcode [post]
 func RunCode(c *gin.Context) {
 	var req CodeRunRequest
 
@@ -54,6 +72,14 @@ func RunCode(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// GetSupportedLanguages godoc
+// @Summary Get list of supported programming languages
+// @Description Returns a list of programming languages that can be executed
+// @Tags code
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string][]string
+// @Router /languages [get]
 func GetSupportedLanguages(c *gin.Context) {
 	languages := []string{
 		"javascript",
