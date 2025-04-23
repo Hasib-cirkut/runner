@@ -131,7 +131,10 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "stderr": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "stdout": {
                     "type": "string"

@@ -14,9 +14,9 @@ type CodeRunRequest struct {
 }
 
 type CodeRunResponse struct {
-	Stdout string `json:"stdout"`
-	Stderr string `json:"stderr"`
-	Error  string `json:"error,omitempty"`
+	Stdout string   `json:"stdout"`
+	Stderr []string `json:"stderr"`
+	Error  string   `json:"error,omitempty"`
 }
 
 // PingExample godoc

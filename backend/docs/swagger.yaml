@@ -14,7 +14,9 @@ definitions:
       error:
         type: string
       stderr:
-        type: string
+        items:
+          type: string
+        type: array
       stdout:
         type: string
     type: object

@@ -11,13 +11,14 @@ import (
 	"time"
 )
 
-func RunCodeInContainer(code string, lang string) (string, string, error) {
+func RunCodeInContainer(code string, lang string) (string, []string, error) {
 	containerID, err := containers.CreateContainer(lang)
+	var errors []string
 
 	fmt.Printf("container created: %v\n", containerID)
 
 	if err != nil {
-		return "", "", fmt.Errorf("failed to create container, %v", err)
+		return "", errors, fmt.Errorf("failed to create container, %v", err)
 	}
 
 	defer containers.RemoveContainer(containerID)
@@ -31,7 +32,7 @@ func RunCodeInContainer(code string, lang string) (string, string, error) {
 	fmt.Printf("%v\n", output)
 
 	if err != nil || len(output) == 0 {
-		return "", "", fmt.Errorf("container %s is not running", containerID)
+		return "", errors, fmt.Errorf("container %s is not running", containerID)
 	}
 
 	filename, err := saveCodeToFile(code, lang)
@@ -39,18 +40,22 @@ func RunCodeInContainer(code string, lang string) (string, string, error) {
 	fmt.Printf("filename generated: %v\n", filename)
 
 	if err != nil {
-		return "", "", fmt.Errorf("failed to save code: %v", err)
+		return "", errors, fmt.Errorf("failed to save code: %v", err)
 	}
 
 	err = containers.CreateFileInContainer(containerID, filename)
 
 	if err != nil {
-		return "", "", fmt.Errorf("failed to copy code to container: %v", err)
+		return "", errors, fmt.Errorf("failed to copy code to container: %v", err)
 	}
 
 	stdout, stderr, err := containers.ExecuteInContainer(containerID, lang, filepath.Base(filename))
 
-	return stdout, stderr, err
+	if stderr != "" {
+		errors = strings.Split(stderr, "\n")
+	}
+
+	return stdout, errors, err
 }
 
 func saveCodeToFile(code string, lang string) (string, error) {

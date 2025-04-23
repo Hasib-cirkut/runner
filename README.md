@@ -11,7 +11,13 @@ Supported Languages: Javascript (till now. more coming)
 - run `go run main.go` to start the backend server.
 - Backend server will be listening on port `:8080` by default
 
-#### Routes
-- GET `localhost:port/api/ping` -> Basic healthcheck
-- GET `localhost:port/api/languages` -> Get the supported languages
-- POST `localhost:port/api/runcode` -> Run Code in container
+##### Developer exprience
+To test routes, this project has swagger installed
+
+After running the server, 
+visit http://localhost:port/swagger/index.html#/ 
+
+- To update the swagger documentation, run
+```bash
+swag init
+```
