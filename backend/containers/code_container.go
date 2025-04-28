@@ -19,7 +19,7 @@ func CreateContainer(language string) (string, error) {
 		"--cap-drop=ALL",                   // Drop all capabilities
 		"--memory=100m",                    // Limit memory
 		"--cpus=0.5",                       // Limit CPU usage
-		"--pids-limit=50",                  // Limit number of processes
+		"--pids-limit=50",                  // Limit the number of processes
 		"--read-only",                      // Read-only filesystem
 		"--tmpfs", "/tmp:exec,rw,size=64m", // Writable /tmp directory
 		image,
@@ -84,8 +84,8 @@ func CreateFileInContainer(containerId string, filename string) error {
 	return nil
 }
 
-func ExecuteInContainer(containerID string, langauage string, filename string) (string, string, error) {
-	execCmd := getExecutionCommand(langauage, filename)
+func ExecuteInContainer(containerID string, language string, filename string) (string, string, error) {
+	execCmd := getExecutionCommand(language, filename)
 
 	cmd := exec.Command("docker", "exec", containerID, "sh", "-c", execCmd)
 
@@ -96,7 +96,10 @@ func ExecuteInContainer(containerID string, langauage string, filename string) (
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
-	cmd.Run()
+	err := cmd.Run()
+	if err != nil {
+		return "", "", err
+	}
 
 	return stdout.String(), stderr.String(), nil
 }

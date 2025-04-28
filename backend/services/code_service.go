@@ -13,15 +13,20 @@ import (
 
 func RunCodeInContainer(code string, lang string) (string, []string, error) {
 	containerID, err := containers.CreateContainer(lang)
-	var errors []string
+	var stderrLines []string
 
 	fmt.Printf("container created: %v\n", containerID)
 
 	if err != nil {
-		return "", errors, fmt.Errorf("failed to create container, %v", err)
+		return "", stderrLines, fmt.Errorf("failed to create container, %v", err)
 	}
 
-	defer containers.RemoveContainer(containerID)
+	defer func(containerID string) {
+		err := containers.RemoveContainer(containerID)
+		if err != nil {
+			fmt.Printf("failed to remove container: %v\n", err)
+		}
+	}(containerID)
 
 	time.Sleep(1000 * time.Millisecond)
 
@@ -32,7 +37,7 @@ func RunCodeInContainer(code string, lang string) (string, []string, error) {
 	fmt.Printf("%v\n", output)
 
 	if err != nil || len(output) == 0 {
-		return "", errors, fmt.Errorf("container %s is not running", containerID)
+		return "", stderrLines, fmt.Errorf("container %s is not running", containerID)
 	}
 
 	filename, err := saveCodeToFile(code, lang)
@@ -40,26 +45,26 @@ func RunCodeInContainer(code string, lang string) (string, []string, error) {
 	fmt.Printf("filename generated: %v\n", filename)
 
 	if err != nil {
-		return "", errors, fmt.Errorf("failed to save code: %v", err)
+		return "", stderrLines, fmt.Errorf("failed to save code: %v", err)
 	}
 
 	err = containers.CreateFileInContainer(containerID, filename)
 
 	if err != nil {
-		return "", errors, fmt.Errorf("failed to copy code to container: %v", err)
+		return "", stderrLines, fmt.Errorf("failed to copy code to container: %v", err)
 	}
 
 	stdout, stderr, err := containers.ExecuteInContainer(containerID, lang, filepath.Base(filename))
 
 	if stderr != "" {
-		errors = strings.Split(stderr, "\n")
+		stderrLines = strings.Split(stderr, "\n")
 	}
 
-	return stdout, errors, err
+	return stdout, stderrLines, err
 }
 
 func saveCodeToFile(code string, lang string) (string, error) {
-	ext := getFileExtention(lang)
+	ext := getFileExtension(lang)
 
 	if ext == "" {
 		return "", errors.New("unsupported language")
@@ -79,10 +84,10 @@ func saveCodeToFile(code string, lang string) (string, error) {
 	return filename, nil
 }
 
-func getFileExtention(lang string) string {
-	extentions := map[string]string{
+func getFileExtension(lang string) string {
+	extensions := map[string]string{
 		"javascript": "js",
 	}
 
-	return extentions[strings.ToLower(lang)]
+	return extensions[strings.ToLower(lang)]
 }

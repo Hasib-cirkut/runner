@@ -19,12 +19,12 @@ type CodeRunResponse struct {
 	Error  string   `json:"error,omitempty"`
 }
 
-// PingExample godoc
+// HealthCheck PingExample godoc
 // @Summary ping example
 // @Schemes
 // @Description do ping // @Tags example
-// @Accept json
-// @Produce json
+// @Accept JSON
+// @Produce JSON
 // @Success 200 {string} pong
 // @Router /ping/ [get]
 func HealthCheck(c *gin.Context) {
@@ -73,11 +73,11 @@ func RunCode(c *gin.Context) {
 }
 
 // GetSupportedLanguages godoc
-// @Summary Get list of supported programming languages
+// @Summary Get a list of supported programming languages
 // @Description Returns a list of programming languages that can be executed
 // @Tags code
-// @Accept json
-// @Produce json
+// @Accept JSON
+// @Produce JSON
 // @Success 200 {object} map[string][]string
 // @Router /languages [get]
 func GetSupportedLanguages(c *gin.Context) {

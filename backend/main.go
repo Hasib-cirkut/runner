@@ -30,5 +30,8 @@ func main() {
 	r.GET("api/languages", controllers.GetSupportedLanguages)
 	r.POST("api/runcode", controllers.RunCode)
 
-	r.Run(":8080")
+	err := r.Run(":8080")
+	if err != nil {
+		return
+	}
 }
