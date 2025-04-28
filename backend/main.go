@@ -3,6 +3,7 @@ package main
 import (
 	"runner-api/controllers"
 	"runner-api/docs"
+	"runner-api/state"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,10 @@ func main() {
 	}))
 
 	docs.SwaggerInfo.BasePath = "/api/"
+
+	containerState := state.NewContainerState()
+
+	containerState.CreateContainers()
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
